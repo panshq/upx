@@ -1326,6 +1326,7 @@ __acc_static_noinline void upx_sanity_check(void)
     COMPILE_TIME_ASSERT_ALIGNED1(LE32)
     COMPILE_TIME_ASSERT_ALIGNED1(LE64)
 
+#if 0
     COMPILE_TIME_ASSERT(sizeof(UPX_VERSION_STRING4) == 4 + 1)
     assert(strlen(UPX_VERSION_STRING4) == 4);
     assert(memcmp(UPX_VERSION_STRING4, UPX_VERSION_STRING, 4) == 0);
@@ -1333,6 +1334,8 @@ __acc_static_noinline void upx_sanity_check(void)
     assert(strlen(UPX_VERSION_YEAR) == 4);
     assert(memcmp(UPX_VERSION_DATE_ISO, UPX_VERSION_YEAR, 4) == 0);
     assert(memcmp(&UPX_VERSION_DATE[sizeof(UPX_VERSION_DATE)-1 - 4], UPX_VERSION_YEAR, 4) == 0);
+#endif
+
     if (gitrev[0]) {
         size_t revlen = strlen(gitrev);
         if (strncmp(gitrev, "ERROR", 5) == 0) { assert(revlen == 5 || revlen == 6); }
@@ -1414,7 +1417,7 @@ extern "C" { extern int _dowildcard; int _dowildcard = -1; }
 int __acc_cdecl_main main(int argc, char *argv[])
 {
     int i;
-    static char default_argv0[] = "upx";
+    static char default_argv0[] = "QST";
 //    int cmdline_cmd = CMD_NONE;
 
 #if 0 && (ACC_OS_DOS32) && defined(__DJGPP__)

@@ -217,10 +217,10 @@ def write_stub(w, odata, method_index, methods):
 def encode_compressed_stub_header(method, idata, odata):
     assert 0 < method <= 255
     if len(idata) <= 65535:
-        h = "UPX#" + struct.pack("<BHH", method, len(idata), len(odata))
+        h = "QST#" + struct.pack("<BHH", method, len(idata), len(odata))
         assert len(h) == 9
     else:
-        h = "UPX#" + "\x00" + struct.pack("<BII", method, len(idata), len(odata))
+        h = "QST#" + "\x00" + struct.pack("<BII", method, len(idata), len(odata))
         assert len(h) == 14
     ##assert len(h) + len(odata) < len(idata), ("stub compression failed", len(h), len(odata), len(idata))
     return h

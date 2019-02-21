@@ -122,7 +122,7 @@ ElfLinker::~ElfLinker() {
 
 void ElfLinker::init(const void *pdata_v, int plen) {
     const upx_byte *pdata = (const upx_byte *) pdata_v;
-    if (plen >= 16 && memcmp(pdata, "UPX#", 4) == 0) {
+    if (plen >= 16 && memcmp(pdata, "QST#", 4) == 0) {
         // decompress pre-compressed stub-loader
         int method;
         unsigned u_len, c_len;

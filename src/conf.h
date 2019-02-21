@@ -248,7 +248,7 @@ typedef size_t upx_rsize_t;
 #endif
 
 #ifndef OPTIONS_VAR
-#  define OPTIONS_VAR   "UPX"
+#  define OPTIONS_VAR   "QST"
 #endif
 
 

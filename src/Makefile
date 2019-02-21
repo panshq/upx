@@ -37,7 +37,9 @@ objext ?= .o
 upx_SOURCES := $(sort $(wildcard $(srcdir)/*.cpp))
 upx_OBJECTS := $(notdir $(upx_SOURCES:.cpp=$(objext)))
 
-ifneq ($(wildcard $(top_srcdir)/.git/.),)
+# modification is pan, time 20190220
+ifeq ($(wildcard $(top_srcdir)/.git/.),)
+#ifneq ($(wildcard $(top_srcdir)/.git/.),)
 UPX_VERSION_GITREV := $(strip $(shell cd '$(top_srcdir)' && git rev-parse --short=12 HEAD || echo 'ERROR'))
 ifneq ($(UPX_VERSION_GITREV),)
 GITREV_PLUS := $(strip $(shell cd '$(top_srcdir)' && git diff --exit-code HEAD >/dev/null && echo '' || echo '+'))
@@ -104,9 +106,12 @@ else
 endif
 
 CHECK_WHITESPACE =
-ifeq ($(shell uname),Linux)
+# modification is pan, time 20190221
+ifneq ($(shell uname),Linux)
+#ifeq ($(shell uname),Linux)
 CHECK_WHITESPACE = $(top_srcdir)/src/stub/scripts/check_whitespace.sh $(top_srcdir)
-ifneq ($(wildcard $(top_srcdir)/.git/.),)
+ifeq ($(wildcard $(top_srcdir)/.git/.),)
+#ifneq ($(wildcard $(top_srcdir)/.git/.),)
 CHECK_WHITESPACE = $(top_srcdir)/src/stub/scripts/check_whitespace_git.sh $(top_srcdir)
 endif
 check-whitespace : ; $(CHECK_WHITESPACE)

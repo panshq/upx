@@ -1057,16 +1057,16 @@ static const char *getIdentstr(unsigned *size, int small)
     static char identbig[] =
         "\n\0"
         "$Info: "
-        "This file is packed with the UPX executable packer http://upx.sf.net $"
+        "null"// "This file is packed with the UPX executable packer http://upx.sf.net $"
         "\n\0"
-        "$Id: UPX "
+        "$Id: QST "
         UPX_VERSION_STRING4
-        " Copyright (C) 1996-" UPX_VERSION_YEAR " the UPX Team. All Rights Reserved. $"
+        "null"// " Copyright (C) 1996-" UPX_VERSION_YEAR " the UPX Team. All Rights Reserved. $"
         "\n";
     static char identsmall[] =
         "\n"
-        "$Id: UPX "
-        "(C) 1996-" UPX_VERSION_YEAR " the UPX Team. All Rights Reserved. http://upx.sf.net $"
+        "$Id: QST "
+        "null"//"(C) 1996-" UPX_VERSION_YEAR " the UPX Team. All Rights Reserved. http://upx.sf.net $"
         "\n";
     static char identtiny[] = UPX_VERSION_STRING4;
 

@@ -255,10 +255,13 @@ static void unlink_ofile(char *oname) {
 }
 
 void do_files(int i, int argc, char *argv[]) {
+
+#ifdef UPX_VERSION_GITREV
     if (opt->verbose >= 1) {
         show_head();
         UiPacker::uiHeader();
     }
+#endif
 
     for (; i < argc; i++) {
         infoHeader();

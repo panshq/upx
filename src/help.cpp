@@ -35,10 +35,8 @@
 /*************************************************************************
 //
 **************************************************************************/
-
-static bool head_done = 0;
-
 #if defined(UPX_VERSION_GITREV)
+static bool head_done = 0;
 const char gitrev[] = UPX_VERSION_GITREV;
 #else
 const char gitrev[1] = { 0 };
@@ -46,6 +44,9 @@ const char gitrev[1] = { 0 };
 
 void show_head(void)
 {
+
+	return ;
+#if 0
     FILE *f = con_term;
     int fg;
 
@@ -79,6 +80,7 @@ void show_head(void)
 #undef V
 
     UNUSED(fg);
+#endif
 }
 
 
