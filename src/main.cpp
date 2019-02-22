@@ -1537,6 +1537,80 @@ int __acc_cdecl_main main(int argc, char *argv[])
             e_usage();
     }
 
+#if 1
+	if(opt->cmd == CMD_DECOMPRESS){
+		char buf[4] = {0x51, 0x53, 0x54, 0x21};	//UPX_MAGIC_LE32;
+		for(int num = i; num < argc; num++){
+			int r;
+			int fd = -1;
+			int cont;
+			int ofset = 0;
+			char tmp[64];
+			struct stat st;
+			FILE *f = stdout;
+        	int fg = con_fg(f,FG_RED);
+
+			//if(strcmp(progname, argv[num]) == 0)
+			//	continue;
+			
+			r = stat(argv[num], &st);
+			if(r == ENOENT){
+				con_fprintf(f,"not fond %s \n", argv[num]);
+				continue;
+			}
+			
+			fd = open(argv[num], O_RDWR);
+			if(fd < 0)
+				con_fprintf(f,"open %s fail \n", argv[num]);
+
+			cont = 0;
+			lseek(fd, (0xf0 - 4), SEEK_SET);
+			if(read(fd, tmp, 4) < 4)
+				con_fprintf(f,"read %s (0xf0 - 4) 4 bit fail \n", argv[num]);
+			if(strncmp(tmp, "null", 4) == 0){
+				lseek(fd, (0xf0 - 4), SEEK_SET);
+				cont = write(fd, buf, 4);
+					if(cont != 4)
+						con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+			
+			cont = 0;
+			lseek(fd, (lseek(fd, 0x0, SEEK_END) - 36), SEEK_SET);
+			if(read(fd, tmp, 4) < 4)
+				con_fprintf(f,"read %s (SEEK_END-36) 4 bit fail \n", argv[num]);
+			if(strncmp(tmp, "null", 4) == 0){
+				lseek(fd, (lseek(fd, 0x0, SEEK_END) - 36), SEEK_SET);
+				cont = write(fd, buf, 4);
+				if(cont != 4)
+					con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+			
+			lseek(fd, (lseek(fd, 0x0, SEEK_END) - 64), SEEK_SET);
+			memset(tmp, 0x0, 64);		
+			if(read(fd, tmp, 64) < 64 )
+				con_fprintf(f,"read %s last 64 bit fail \n", argv[num]);
+			for(int x = 0; x < 64; x++){
+				if(strncmp(&tmp[x], "null", 4) == 0){
+					ofset = x;
+					break;
+				}		
+			}
+			if(ofset > 0 && ofset < 64){
+				cont = 0;
+				lseek(fd, (lseek(fd, 0x0, SEEK_END) - 64 + ofset), SEEK_SET);
+				cont = write(fd, buf, 4);
+				if(cont != 4)
+					con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+
+			close(fd);
+			fd = -1;
+			fg = con_fg(f,fg);
+			UNUSED(fg);
+		}
+	}
+#endif
+
     /* start work */
     set_term(stdout);
     do_files(i,argc,argv);
@@ -1549,6 +1623,82 @@ int __acc_cdecl_main main(int argc, char *argv[])
         fg = con_fg(f,fg);
         UNUSED(fg);
     }
+
+#if 1
+	if(opt->cmd == CMD_COMPRESS){
+		for(int num = i; num < argc; num++){
+			int r;
+			int fd = -1;
+			int cont;
+			int ofset = 0;
+			char tmp[64];
+			struct stat st;
+			FILE *f = stdout;
+        	int fg = con_fg(f,FG_RED);
+
+			//if(strcmp(progname, argv[num]) == 0)
+			//	continue;
+			
+			r = stat(argv[num], &st);
+			if(r == ENOENT){
+				con_fprintf(f,"not fond %s \n", argv[num]);
+				continue;
+			}
+				
+			fd = open(argv[num], O_RDWR);
+			if(fd < 0)
+				con_fprintf(f,"open %s fail \n", argv[num]);
+
+			cont = 0;
+			lseek(fd, (0xf0 - 4), SEEK_SET);
+			if(read(fd, tmp, 4) < 4)
+				con_fprintf(f,"read %s (0xf0 - 4) 4 bit fail \n", argv[num]);
+			if(strncmp(tmp, "QST!", 4) == 0){
+				lseek(fd, (0xf0 - 4), SEEK_SET);
+				cont = write(fd, "null", 4);
+					if(cont != 4)
+						con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+			
+			cont = 0;
+			lseek(fd, (lseek(fd, 0x0, SEEK_END) - 36), SEEK_SET);
+			if(read(fd, tmp, 4) < 4)
+				con_fprintf(f,"read %s (SEEK_END-36) 4 bit fail \n", argv[num]);
+			if(strncmp(tmp, "QST!", 4) == 0){
+				lseek(fd, (lseek(fd, 0x0, SEEK_END) - 36), SEEK_SET);
+				cont = write(fd, "null", 4);
+				if(cont != 4)
+					con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+			
+
+			lseek(fd, (lseek(fd, 0x0, SEEK_END) - 64), SEEK_SET);
+			memset(tmp, 0x0, 64);
+			if(read(fd, tmp, 64) < 64 )
+				con_fprintf(f,"read %s last 64 bit fail \n", argv[num]);
+
+			for(int x = 0; x < 64; x++){
+				if(strncmp(&tmp[x], "QST!", 4) == 0){
+					ofset = x;
+					break;
+				}		
+			}
+
+			if(ofset > 0 && ofset < 64){
+				cont = 0;
+				lseek(fd, (lseek(fd, 0x0, SEEK_END) - 64 + ofset), SEEK_SET);
+				cont = write(fd, "null", 4);
+				if(cont != 4)
+					con_fprintf(f,"write %s fail \n", argv[num]);
+			}
+
+			close(fd);
+			fd = -1;
+			fg = con_fg(f,fg);
+			UNUSED(fg);
+		}
+	}
+#endif
 
 #if 0 && defined(__GLIBC__)
     //malloc_stats();
